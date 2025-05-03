@@ -1,0 +1,67 @@
+```mermaid
+erDiagram
+  users {
+    UUID id PK
+    string cognito_sub UK "Cognito の sub(ID連携)"
+    string name "ユーザー名"
+    string email UK "ユーザーメールアドレス"
+    enum role "権限区分"
+    string avatar_url "プロフィール画像URL"
+    string bio "自己紹介"
+    datetime created_at "作成日時"
+    datetime updated_at "更新日時"
+  }
+  whiskies {
+    UUID id PK
+    string name "ウィスキー名"
+    string distillery "蒸溜所名"
+    string country "原産国"
+    int age "熟成年数(NAはnull)"
+    enum cask "カスク種別"
+    float alcohol "アルコール度数"
+    string official_url "公式ページURL"
+    text description "説明文"
+    string image_url "表示用画像URL"
+    int version "排他制御用バージョン"
+    datetime created_at "作成日時"
+    datetime updated_at "更新日時"
+  }
+  reviews {
+    UUID id PK
+    UUID user_id FK "投稿者"
+    UUID whisky_id FK "対象ウィスキー"
+    int rating "総合評価スコア"
+    string title "レビューテーマ(短文)"
+    text body "レビュー本文"
+    string[] flavor_notes "味わいタグ(将来拡張可)"
+    string location "飲んだ場所"
+    float price "飲んだ価格"
+    string image_url "投稿画像URL"
+    int version "排他制御用バージョン"
+    datetime created_at "作成日時"
+    datetime updated_at "更新日時"
+  }
+  favorites {
+    UUID id PK
+    UUID user_id FK "いいねしたユーザー"
+    UUID review_id FK "対象レビュー"
+    datetime created_at "作成日時"
+    datetime updated_at "更新日時"
+  }
+  whisky_applications {
+    UUID id PK
+    UUID user_id FK "申請者ID"
+    string proposed_name "提案されたウィスキー名"
+    text details "提案の詳細内容"
+    enum status "審査状態"
+    datetime created_at "作成日時"
+    datetime updated_at "更新日時"
+  }
+
+  users ||--o{ reviews : "1人のユーザーは複数のレビューを持つ"
+  users ||--o{ favorites : "1人のユーザーは複数のいいねを持つ"
+  users ||--o{ whisky_applications : "1人のユーザは複数の申請を持つ"
+  whiskies ||--o{ reviews : "1つのウィスキーは複数のレビューを持つ"
+  reviews ||--o{ favorites : "1つのレビューは複数のいいねを持つ"
+
+```

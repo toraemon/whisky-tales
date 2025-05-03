@@ -1,0 +1,42 @@
+```mermaid
+classDiagram
+    class User {
+        +UUID id
+        +string name
+        +string email
+        +submitReview()
+        +favoriteReview()
+    }
+    class Whisky {
+        +UUID id
+        +string name
+        +string distillery
+        +string country
+    }
+    class Review {
+        +UUID id
+        +User author
+        +Whisky target
+        +int rating
+        +string body
+        +submit()
+    }
+    class Favorite {
+        +UUID id
+        +User user
+        +Review review
+        +toggle()
+    }
+    class WhiskyApplication {
+        +UUID id
+        +User applicant
+        +string proposedName
+        +submit()
+    }
+
+    User --> Review : 投稿する
+    User --> Favorite : いいねする
+    Review --> Whisky : 評価対象
+    Favorite --> Review : 対象レビュー
+    WhiskyApplication --> User : 申請者
+```
