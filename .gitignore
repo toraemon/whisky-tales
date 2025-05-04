@@ -41,6 +41,9 @@ out/
 /prisma/migrations/
 *.sqlite
 
+# Prisma generated client
+/generated/prisma/
+
 # Build output
 dist/
 build/
