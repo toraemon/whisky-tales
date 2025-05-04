@@ -37,12 +37,8 @@ out/
 # TypeScript
 *.tsbuildinfo
 
-# Prisma
-/prisma/migrations/
-*.sqlite
-
 # Prisma generated client
-/generated/prisma/
+**/generated/prisma/
 
 # Build output
 dist/

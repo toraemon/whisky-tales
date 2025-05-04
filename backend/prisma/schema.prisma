@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  userName  String   @map("user_name")
+  email     String   @unique
+  role      Role
+  avatarUrl String?  @map("avatar_url")
+  bio       String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Review   Review[]
+  Favorite Favorite[]
+
+  @@map("users")
+}
+
+model Whisky {
+  id          String   @id @default(uuid())
+  name        String
+  distillery  String
+  country     String
+  age         Int?
+  cask        Cask?
+  alcohol     Float?
+  officialUrl String   @map("official_url")
+  description String
+  imageUrl    String   @map("image_url")
+  version     Int      @default(1)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  Review Review[]
+
+  @@map("whiskies")
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  whiskyId    String   @map("whisky_id")
+  rating      Int
+  title       String?
+  body        String
+  flavorNotes String[] @map("flavor_notes")
+  location    String?
+  price       Float?
+  imageUrl    String?  @map("image_url")
+  version     Int      @default(1)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  Favorite Favorite[]
+
+  User   User   @relation(fields: [userId], references: [id])
+  Whisky Whisky @relation(fields: [whiskyId], references: [id])
+
+  @@map("reviews")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  reviewId  String   @map("review_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  User   User   @relation(fields: [userId], references: [id])
+  Review Review @relation(fields: [reviewId], references: [id])
+
+  @@index([userId, reviewId])
+  @@map("favorites")
+}
+
+enum Role {
+  user
+  admin
+}
+
+enum Cask {
+  sherry
+  bourbon
+  madeira
+  etc
+}
